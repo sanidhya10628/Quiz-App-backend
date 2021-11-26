@@ -25,6 +25,16 @@ const quizSchema = moongose.Schema({
     }
 })
 
+
+// RelationShip Bewteen Quiz and Question
+quizSchema.virtual('Question', {
+    ref: 'Question',
+    localField: '_id',
+    foreignField: 'quizId'
+})
+
+
+
 const Quiz = moongose.model('Quiz', quizSchema);
 module.exports = Quiz;
 

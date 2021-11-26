@@ -26,6 +26,21 @@ const userSchema = moongose.Schema({
     }
 })
 
+
+// RelationShip Between User and Quiz
+userSchema.virtual('Quiz', {
+    ref: 'Quiz',
+    localField: '_id',
+    foreignField: 'owner'
+})
+
+// RelationShip Between User and Question
+userSchema.virtual('Question', {
+    ref: 'Question',
+    localField: '_id',
+    foreignField: 'userId'
+})
+
 const User = moongose.model('User', userSchema);
 module.exports = User;
 

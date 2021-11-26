@@ -1,6 +1,6 @@
 const moongose = require('mongoose');
 
-const userSchema = moongose.Schema({
+const quizSchema = moongose.Schema({
 
     // Quiz ID
     quizId: {
@@ -13,7 +13,7 @@ const userSchema = moongose.Schema({
         required: true,
         ref: 'User'
     },
-    questionTitle: {
+    question: {
         type: String,
         required: true,
         trim: true
