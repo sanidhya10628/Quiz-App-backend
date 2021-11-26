@@ -33,7 +33,12 @@ quizSchema.virtual('Question', {
     foreignField: 'quizId'
 })
 
-
+// RelationShip Between Quiz and response
+quizSchema.virtual('Response', {
+    ref: 'Response',
+    localField: '_id',
+    foreignField: 'quizId'
+})
 
 const Quiz = moongose.model('Quiz', quizSchema);
 module.exports = Quiz;
