@@ -23,7 +23,12 @@ const quizSchema = moongose.Schema({
     ],
     options: [
         String
-    ]
+    ],
+    optionType: {
+        type: String,
+        enum: ['check', 'radio'],
+        required: true
+    }
 
 })
 

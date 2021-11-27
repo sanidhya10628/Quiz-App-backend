@@ -42,6 +42,13 @@ router.post('/user/quiz/:id/addQuestion', async (req, res) => {
             }
         }
 
+        // Futhure Check that answer is within the range or not
+        // updatedAnswers.forEach((updatedAnswer) => {
+        //     if (updatedAnswer <= 0 && updatedAnswer > updatedAnswers.length) {
+        //         console.log("hello ")
+        //         return res.send("Invalid answer option")
+        //     }
+        // })
 
         // triming the options
         const updatedOptions = options.map((option) => {
@@ -49,12 +56,20 @@ router.post('/user/quiz/:id/addQuestion', async (req, res) => {
         })
 
 
+        // Check that Question type is Radio or Check
+        if (updatedAnswers.length > 1) {
+            optionType = 'check'
+        } else {
+            optionType = 'radio'
+        }
+
         const newQuestion = await new QuestionModel({
             question: question,
             answer: updatedAnswers,
             options: updatedOptions,
             userId: currUser.id,
-            quizId: req.params.id
+            quizId: req.params.id,
+            optionType: optionType
         })
 
         await newQuestion.save()
