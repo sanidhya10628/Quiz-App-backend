@@ -23,17 +23,16 @@ router.get('/attemptQuiz/:id', async (req, res) => {
 })
 
 
-router.post('/attemptQuiz', (req, res) => {
+router.post('/finishQuiz', (req, res) => {
     try {
-
+        console.log(req.body)
+        res.send("hi")
     }
     catch (e) {
         console.log(e)
         res.send(e)
     }
 })
-
-
 
 
 module.exports = router;
