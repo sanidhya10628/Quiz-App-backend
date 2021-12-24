@@ -24,28 +24,47 @@ router.post('/login', async (req, res) => {
 
         // 1. Email is Valid or not
         if (!validator.isEmail(email)) {
-            return res.send("Invalid Email")
+            return res.json({
+                status: 'FAILED',
+                msg: 'Invalid Email'
+            })
         }
 
         // 2. User Exists or Not
         const currUserLogin = await UserModel.findOne({ email: email })
         if (!currUserLogin) {
-            return res.send("Invalid Email")
+            return res.json({
+                status: 'FAILED',
+                msg: 'Invalid Email or Password'
+            })
         }
 
         // 3 .Password is Valid or not
         const isValidPassword = await bcrypt.compare(password, currUserLogin.password)
         if (!isValidPassword) {
-            return res.send("Invalid Password")
+            return res.json({
+                status: 'FAILED',
+                msg: 'Invalid Email or Password'
+            })
         }
+        const token = await currUserLogin.generateAuthToken()
 
-        res.status(200).send("Welcome")
+        return res.json({
+            status: 'OK',
+            msg: 'Logged in Successfully',
+            user: currUserLogin.email,
+            token: token,
+            name: currUserLogin.name
+        })
 
     }
 
     catch (e) {
         console.log(e)
-        res.send(e)
+        res.json({
+            status: 'FAILED',
+            msg: 'Something Went Wrong. Please try again'
+        })
     }
 })
 

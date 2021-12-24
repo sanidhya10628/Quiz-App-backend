@@ -8,7 +8,10 @@ const QuizModel = require('../models/quiz')
 
 // GET Route to See the Form to JOIN the Quiz
 router.get('/joinQuiz', (req, res) => {
-    res.render('joinQuiz')
+    res.json({
+        status: 'OK',
+        msg: 'Join Quiz Page'
+    })
 })
 
 
@@ -24,15 +27,24 @@ router.post('/joinQuiz', async (req, res) => {
         // 2. Check that the Quiz id is valid or not
         const isQuizCodeValid = await QuizModel.findById(joinQuizCode);
         if (!isQuizCodeValid) {
-            return res.send("Invalid Quiz Code")
+            return res.json({
+                status: 'FAILED',
+                msg: 'Invalid Quiz Code'
+            })
         }
 
-        res.redirect(`/attemptQuiz/${joinQuizCode}`)
+        return res.json({
+            status: 'OK',
+            msg: 'Sucess'
+        })
 
     }
     catch (e) {
         console.log(e)
-        res.send(e);
+        return res.json({
+            status: 'OK',
+            msg: 'Something Went Wrong. Please try again'
+        })
     }
 })
 

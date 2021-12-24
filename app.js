@@ -17,12 +17,10 @@ const attemptQuizRoute = require('./routes/attemptQuiz')
 // Database connection
 require('./db/mongoose')
 
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, '/views'));
+
 
 // Body Parser
 app.use(express.urlencoded({ extended: true }))
-app.use(express.static(path.join(__dirname, '/public')))
 app.use(express.json());
 
 

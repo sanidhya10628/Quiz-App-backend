@@ -4,13 +4,8 @@ const router = express.Router();
 
 
 // Model Dependency
-const QuizModel = require('../models/quiz')
 const QuestionModel = require('../models/question')
 
-
-// for demo only
-const UserModel = require('../models/user')
-// for demo only
 
 // GET Request
 router.get('/user/quiz/:id/addQuestion', (req, res) => {
@@ -21,10 +16,7 @@ router.get('/user/quiz/:id/addQuestion', (req, res) => {
 // POST Request
 router.post('/user/quiz/:id/addQuestion', async (req, res) => {
     try {
-        // for demo only
 
-        const currUser = await UserModel.findOne({ email: 'sanidhya10628@gmail.com' })
-        // for demo only
         let quizId = req.params
         let { question, answers, options } = req.body
 
