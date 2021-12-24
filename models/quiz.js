@@ -22,16 +22,29 @@ const quizSchema = moongose.Schema({
         type: moongose.Schema.Types.ObjectId,
         required: true,
         ref: 'User'
-    }
+    },
+
+    // questions 
+    questions: [{
+        question: {
+            type: String,
+            required: true,
+            trim: true
+        },
+        answers: [
+            Number
+        ],
+        options: [
+            String
+        ],
+        optionType: {
+            type: String,
+            enum: ['check', 'radio'],
+            required: true
+        }
+    }]
 })
 
-
-// RelationShip Bewteen Quiz and Question
-quizSchema.virtual('Question', {
-    ref: 'Question',
-    localField: '_id',
-    foreignField: 'quizId'
-})
 
 // RelationShip Between Quiz and response
 quizSchema.virtual('Response', {

@@ -5,67 +5,107 @@ const moment = require('moment')
 
 // Model Dependency
 const quizModel = require('../models/quiz')
-const QuestionModel = require('../models/question')
 
 
-
+// Auth
+const auth = require('../config/auth')
 
 
 // Create Quiz GET Request
 router.get('/createQuiz', (req, res) => {
-    res.send('Create Quiz');
+    res.json({
+        status: 'OK',
+        msg: 'Create Quiz Page'
+    })
 })
 
-//Gloabl for demo
-const userModel = require('../models/user')
+
 
 
 // Create Quiz POST Request 
-router.post('/user/createQuiz', async (req, res) => {
-    /* for demo only */
-
-    const currUser = await userModel.findOne({ email: 'sanidhya10628@gmail.com' })
-    /* for demo only */
+router.post('/user/createQuiz', auth, async (req, res) => {
     try {
-        let { title, isOpen } = req.body
+        let { title, isOpen, questions } = req.body
 
         // Validations
 
         title = validator.trim(title)
-        isOpen = validator.trim(isOpen)
-        isOpen = validator.toBoolean(isOpen)
+
+        if (isOpen === 1) {
+            isOpen = true
+        } else {
+            isOpen = false
+        }
+
         const date = moment().format('MMMM Do YYYY, h:mm:ss a')
+
+
+        // Questions 
+        const updatedQuestions = questions.map((question) => {
+
+            // Convert Answer string into answer array
+            const { answers, options } = question
+            let updatedAnswers = []
+            for (let i = 0; i < answers.length; i++) {
+                if (validator.isNumeric(answers[i])) {
+                    updatedAnswers.push(parseInt(answers[i]))
+                }
+            }
+            question.answers = updatedAnswers
+
+            // triming the options
+            const updatedOptions = options.map((option) => {
+                return validator.trim(option)
+            })
+
+            question.options = updatedOptions
+        })
 
         const newQuiz = await new quizModel({
             title: title,
             isOpen: isOpen,
             date: date,
-            owner: currUser.id
+            owner: req.user.id,
+            questions: questions
         })
 
         await newQuiz.save()
 
-        res.redirect(`/user/quiz/${newQuiz._id}/addQuestion`)
+        return res.json({
+            status: 'OK',
+            msg: 'Quiz Created Successfully'
+        })
 
     }
     catch (e) {
         console.log(e)
-        res.send(e)
+        res.json({
+            status: 'ERROR',
+            msg: 'Something went wrong. Please try again'
+        })
     }
 })
 
 
 
 // Route to See a Particular Quiz and its questions
-router.get('/user/quiz/:id', async (req, res) => {
+router.get('/user/quiz/:id', auth, async (req, res) => {
     try {
         const quiz = await quizModel.findById(req.params.id)
         const questions = await QuestionModel.find({ quidId: req.params.id })
-        res.json({ quiz, questions })
+        res.json({
+            status: 'OK',
+            msg: 'Quiz and Questions Fetched Successfully',
+            quiz: quiz,
+            questions: questions
+        })
     }
     catch (e) {
         console.log(e)
-        res.send(e)
+        res.status({
+            status: 'ERROR',
+            msg: 'Something Went Wrong. Please try again.'
+        })
     }
 })
 module.exports = router;

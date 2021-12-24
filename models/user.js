@@ -41,12 +41,6 @@ userSchema.virtual('Quiz', {
     foreignField: 'owner'
 })
 
-// RelationShip Between User and Question
-userSchema.virtual('Question', {
-    ref: 'Question',
-    localField: '_id',
-    foreignField: 'userId'
-})
 
 
 userSchema.methods.generateAuthToken = async function () {

@@ -3,6 +3,9 @@ const validator = require('validator')
 const router = express.Router();
 
 
+// Auth
+const auth = require('../config/auth')
+
 // Model Dependency
 const QuizModel = require('../models/quiz')
 
@@ -16,7 +19,7 @@ router.get('/joinQuiz', (req, res) => {
 
 
 // POST Request 
-router.post('/joinQuiz', async (req, res) => {
+router.post('/joinQuiz', auth, async (req, res) => {
     try {
         let { joinQuizCode } = req.body
 
@@ -35,7 +38,10 @@ router.post('/joinQuiz', async (req, res) => {
 
         return res.json({
             status: 'OK',
-            msg: 'Sucess'
+            msg: 'Success',
+            quizID: isQuizCodeValid._id,
+            quizTitle: isQuizCodeValid.title,
+            quizQuestions: isQuizCodeValid.questions
         })
 
     }
